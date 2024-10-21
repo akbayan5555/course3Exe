@@ -1,0 +1,23 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+
+data = {'Advertising Spend': [5, 10, 15, 20, 25],
+    'Sales': [14, 28, 35, 45, 55]}
+df = pd.DataFrame(data)
+X = df[['Advertising Spend']].values
+y = df['Sales'].values
+model = LinearRegression()
+model.fit(X, y)
+y_pred = model.predict(X)
+
+plt.scatter(X, y, color='navy', label='Actual Sales')
+plt.plot(X, y_pred, color='grey', label='Predicted Sales (Regression Line)')
+plt.xlabel('Advertising Spend (in thousands $)')
+plt.ylabel('Sales (in thousands units)')
+plt.title('Analysis of Sales vs. Advertising Spend')
+plt.legend()
+plt.show()
+print(f'Coefficient: {model.coef_[0]:.2f}')
+print(f'Intersection: {model.intercept_:.2f}')
