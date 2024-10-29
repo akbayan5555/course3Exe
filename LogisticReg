@@ -1,0 +1,35 @@
+exe1
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+X = np.array([[45], [50], [55], [60], [65], [70], [75], [80], [85], [90], [95]])
+y = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1])
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+
+print("Predictions:", y_pred)
+print("Model accuracy:", accuracy)
+
+probability = model.predict_proba([[78]])[0][1]
+print("Probability of passing the exam with a score of 78:", probability)
+
+exe2
+import numpy as np
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+X = np.array([[22], [25], [30], [35], [40], [45], [50], [55], [60], [65], [70]])
+y = np.array([0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1])
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
+model = LogisticRegression()
+model.fit(X_train, y_train)
+y_pred = model.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print("Predictions:", y_pred)
+print("Model accuracy:", accuracy)
+probability = model.predict_proba([[50]])[0][1]
+print("Probability of buying the product for a 50-year-old:", probability)
