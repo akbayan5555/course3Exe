@@ -1,0 +1,74 @@
+--------------------ANN for Classifying the Iris Dataset
+import numpy as np
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Dense
+from sklearn.preprocessing import OneHotEncoder
+
+data = load_iris()
+X = data['data']
+y = data['target'].reshape(-1, 1)
+
+encoder = OneHotEncoder(sparse_output=False)
+y_encoded = encoder.fit_transform(y)
+
+X_train, X_test, y_train, y_test = train_test_split(X, y_encoded, test_size=0.2, random_state=42)
+
+model = Sequential()
+model.add(Dense(10, input_dim=X_train.shape[1], activation='relu'))
+model.add(Dense(10, activation='relu'))
+model.add(Dense(y_train.shape[1], activation='softmax'))
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.fit(X_train, y_train, epochs=100, batch_size=10, verbose=1)
+
+loss, accuracy = model.evaluate(X_test, y_test, verbose=0)
+print(f"Test Accuracy: {accuracy:.2f}")
+-----------------------------Example for RNN for text Generation
+import numpy as np
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import SimpleRNN, Dense
+
+text = "Recurrent neural networks are used for sequential data."
+chars = sorted(list(set(text)))
+char_to_index = {char: i for i, char in enumerate(chars)}
+index_to_char = {i: char for i, char in enumerate(chars)}
+
+seq_length = 5
+sequences = []
+labels = []
+
+for i in range(len(text) - seq_length):
+    seq = text[i:i + seq_length]
+    label = text[i + seq_length]
+    sequences.append([char_to_index[char] for char in seq])
+    labels.append(char_to_index[label])
+
+X = np.array(sequences)
+y = np.array(labels)
+
+X_one_hot = tf.one_hot(X, len(chars))
+y_one_hot = tf.one_hot(y, len(chars))
+
+model = Sequential()
+model.add(SimpleRNN(100, input_shape=(seq_length, len(chars)), activation='relu'))
+model.add(Dense(len(chars), activation='softmax'))
+
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+model.fit(X_one_hot, y_one_hot, epochs=50)
+
+start_seq = "Rec"
+generated_text = start_seq
+
+for i in range(50):
+    x = np.array([[char_to_index[char] for char in generated_text[-seq_length:]]])
+    x_one_hot = tf.one_hot(x, len(chars))
+    prediction = model.predict(x_one_hot)
+    next_index = np.argmax(prediction)
+    next_char = index_to_char[next_index]
+    generated_text += next_char
+
+print("Generated Text:")
+print(generated_text)
