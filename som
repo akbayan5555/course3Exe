@@ -1,0 +1,21 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from minisom import MiniSom
+
+np.random.seed(0)  
+data = np.random.rand(100, 3)  
+
+som = MiniSom(x=5, y=5, input_len=3, sigma=1.0, learning_rate=0.5)
+
+som.train_random(data, 100)
+
+plt.figure(figsize=(7, 7))
+plt.pcolor(som.distance_map().T, cmap='Blues')  
+
+for i, x in enumerate(data):
+    win_x, win_y = som.winner(x)  
+    plt.text(win_x + 0.5, win_y + 0.5, '.', color=plt.cm.viridis(x[0]), ha='center', va='center', fontsize=12)
+
+plt.colorbar()
+plt.title('Color clustering using SOM')
+plt.show()
