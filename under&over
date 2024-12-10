@@ -1,0 +1,36 @@
+Underfitting
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.metrics import mean_squared_error
+np.random.seed(42)
+X = np.random.rand(100, 1) * 10
+y = 2 * X**2 - 3 * X + 4 + np.random.randn(100, 1) * 5
+model = LinearRegression()
+model.fit(X, y)
+y_pred = model.predict(X)
+mse = mean_squared_error(y, y_pred)
+plt.scatter(X, y, label="True data", color="blue", alpha=0.6)
+plt.plot(X, y_pred, label="Linear model (Underfitting)", color="red")
+plt.legend()
+plt.title(f"Underfitting: MSE = {mse:.2f}")
+plt.show()
+
+-------------------------------------------------------
+Overfitting
+from sklearn.preprocessing import PolynomialFeatures
+from sklearn.linear_model import LinearRegression
+poly_features = PolynomialFeatures(degree=10, include_bias=False)
+X_poly = poly_features.fit_transform(X)
+model = LinearRegression()
+model.fit(X_poly, y)
+y_pred = model.predict(X_poly)
+mse = mean_squared_error(y, y_pred)
+X_range = np.linspace(X.min(), X.max(), 500).reshape(-1, 1)
+X_range_poly = poly_features.transform(X_range)
+y_range_pred = model.predict(X_range_poly)
+plt.scatter(X, y, label="True data", color="blue", alpha=0.6)
+plt.plot(X_range, y_range_pred, label="Пthe olynomial model (Overfitting)", color="red")
+plt.legend()
+plt.title(f"Overfitting: MSE = {mse:.2f}")
+plt.show()
